@@ -15,7 +15,7 @@ spec:
         app: web
     spec:
       containers:
-      - image: ghcr.io/jpetazzo/container.training-spring-music
+      - image: ghcr.io/jpetazzo/spring-music
         name: spring-music
         env:
         - name: PROFILE
