@@ -1,17 +1,31 @@
-version: "3"
+name: container.training-spring-music
 
 services:
   web:
-    build: .
+    image: ghcr.io/container-training-fleet/container.training-spring-music:1.0.3
     ports:
     - ${PORT-8080}:8080
+    expose:
+    - 8080
     environment:
     - PROFILE=postgres
     - SPRING_DATASOURCE_URL=jdbc:postgresql://db/music
+    depends_on:
+      db:
+        condition: service_healthy
+    links:
+        - db
+
 
   db:
     image: postgres:alpine
+    expose:
+    - 5432
     environment:
     - POSTGRES_HOST_AUTH_METHOD=trust
     - POSTGRES_DB=music
-
+    healthcheck:
+        test: ["CMD", "psql", "--host=localhost", "--username=postgres", "--command=SELECT * FROM pg_database LIMIT 1;"]
+        interval: 15s
+        timeout: 10s
+        retries: 5
